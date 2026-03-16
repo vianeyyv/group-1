@@ -1,0 +1,98 @@
+---
+title: "Data Wrangling with R"
+subtitle: "IBM 320 Section 02"
+author: "Savannah Ventic"
+date: "2026-03-04"
+format:
+  html:
+    theme: cosmo
+    toc: true
+    toc-depth: 3
+    toc-location: left
+    embed-resources: true
+
+execute:
+  freeze: auto
+---
+
+**Note:** This codebook is based on the content of the lecture notes published on: [Data Wrangling with Tidyverse](https://jmjung.quarto.pub/m05-1-principles-data-wrangling-with-tidyverse-in-r)
+
+# Overview
+
+## Learning Overview:
+
+By the end of this module, you will be able to:
+
+-   Describe the concept of Data Wrangling.
+-   Describe how Tibbles are different from data frames
+-   Explain how to convert wide or long data to “Tidy” data
+-   Explain how to merge relational data sets using join functions. (Next module)
+-   Explain how to use grouped mutates and filter together.
+-   Be familiar with major dplyr functions for transforming data.
+-   Create a new variable with mutate() and case_when().
+-   Use the pipe operator to shape the data to prepare for analysis and visualization
+
+::: {callout-tip}
+To use mouse multi-cursor editing feature, do the following steps: 1. Select the text you want to edit. 2. Press `shift + alt` and click on the text you want to edit. 3. You can now edit all the selected text simultaneously.
+:::
+
+# Introduction to Data Wrangling
+
+## Loading Packages
+
+**Note:** To add a 'code chunk', you can use the keyboard shortcut but it depends which mode you are in.
+
+In visual mode use: `Ctrl + Alt + I` (Windows/Linux) or `Cmd + Option + I` (Mac) in RStudio.
+
+In source mode use: 'Ctrl + Shift + I'
+
+```{r}
+#install.packages("tidyverse")
+#install.packages ("nycflights13")
+library(tidyverse)
+library (nycflights13)
+
+
+```
+
+## Tibbles v.s. Data Frames
+
+```{r}
+library(tibble)
+library(dplyr)
+
+class(mtcars)
+
+cars.tib <- mtcars |>
+  rownames_to_column(var = "model") |>
+  as_tibble()
+
+cars.tib
+typeof(cars.tib)
+```
+
+## Data Wrangling with dplyr
+
+```{r}
+data()
+```
+
+```{r}
+flights_df <- flights
+
+flights_df |>
+  count(year, month) |>
+  arrange(desc(n)) |>
+  mutate(month = factor(month)) |>
+  ggplot(aes(x = month, y = n, fill = month)) +
+  geom_col(show.legend = FALSE) +
+  coord_flip() +
+  labs(
+    x = "Month",
+    y = "Number of flights",
+    title = "Number of flights by month in New York"
+  ) +
+  theme_bw()
+    
+```
+
